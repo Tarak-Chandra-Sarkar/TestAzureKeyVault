@@ -4,15 +4,26 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
 using TestKeyVault.Models;
 
 namespace TestKeyVault.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public async Task<ActionResult> Index()
         {
-			// Hello
+            var azureServiceTokenProvider = new AzureServiceTokenProvider();
+
+            var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+
+            var secret = await keyVaultClient.GetSecretAsync("https://databaseconnectionvault.vault.azure.net/secrets/kodiakTest").ConfigureAwait(false);
+
+            ViewBag.Secret = secret.Value;
+
+            ViewBag.Principal = azureServiceTokenProvider.PrincipalUsed;
+
             return View();
         }
 
