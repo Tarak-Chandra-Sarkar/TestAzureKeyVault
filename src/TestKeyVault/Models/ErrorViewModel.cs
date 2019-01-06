@@ -1,5 +1,3 @@
-using System;
-
 namespace TestKeyVault.Models
 {
     public class ErrorViewModel

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.KeyVault;
@@ -16,9 +13,13 @@ namespace TestKeyVault.Controllers
         {
             var azureServiceTokenProvider = new AzureServiceTokenProvider();
 
-            var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+            var keyVaultClient =
+                new KeyVaultClient(
+                    new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
 
-            var secret = await keyVaultClient.GetSecretAsync("https://databaseconnectionvault.vault.azure.net/secrets/kodiakTest").ConfigureAwait(false);
+            var secret = await keyVaultClient
+                .GetSecretAsync("https://databaseconnectionvault.vault.azure.net/secrets/kodiakTest")
+                .ConfigureAwait(false);
 
             ViewBag.Secret = secret.Value;
 
@@ -43,7 +44,7 @@ namespace TestKeyVault.Controllers
 
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
     }
 }
